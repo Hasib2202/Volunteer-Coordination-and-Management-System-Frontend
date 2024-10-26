@@ -48,10 +48,12 @@ export class UpdateVolunteerDto {
   email: string;
   
   @IsString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   experience?: string;
 
   @IsString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   skills?: string;
 }

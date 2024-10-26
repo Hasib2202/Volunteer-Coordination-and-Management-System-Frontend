@@ -99,6 +99,13 @@ function EDashboard() {
                 >
                   Add User
                 </button>
+
+                <button
+                  className="px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-blue-700"
+                  onClick={() => router.push('/emanager/editAllUsers')}
+                >
+                  Edit User
+                </button>
                 <button
                   className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
                   onClick={() => router.push('/emanager/deleteusers')}

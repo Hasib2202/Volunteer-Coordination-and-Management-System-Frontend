@@ -8,7 +8,7 @@ import { withAuthProtection } from '@/app/utils/withAuthProtection';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 
-function DeleteUsers() {
+function EditAllUsers() {
     const [activeTable, setActiveTable] = useState('allUsers');
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -133,10 +133,10 @@ function DeleteUsers() {
                 route = `/emanager/editemanager/${id}`;
                 break;
             case 'volunteers':
-                route = `/emanager/updatevolunteer/${id}`;
+                route = `/volunteer/editvolunteer/${id}`;
                 break;
             case 'sponsors':
-                route = `/emanager/updatesponsor/${id}`;
+                route = `/sponsor/editsponsor/${id}`;
                 break;
             default:
                 route = '/emanager';
@@ -175,10 +175,10 @@ function DeleteUsers() {
 
         return (
             <>
-                <div className="p-4 mb-4 ml-4 mr-4 text-sm text-black bg-red-100 rounded-lg" role="alert">
+                {/* <div className="p-4 mb-4 ml-4 mr-4 text-sm text-black bg-red-100 rounded-lg" role="alert">
                     <AlertTriangle className="inline-block w-5 h-5 mr-2" />
                     <span className="font-medium text-red-800">Warning:</span> {tableConfig[activeTable].warningMessage}
-                </div>
+                </div> */}
 
 
                 <table className="min-w-full divide-y divide-gray-200">
@@ -208,20 +208,20 @@ function DeleteUsers() {
                                     <td key={column.key} className="px-4 py-2 text-xs text-gray-500 whitespace-nowrap">
                                         {column.key === 'actions' ? (
                                             <div className="flex items-center justify-center space-x-2 ">
-                                                {/* <button
+                                                <button
                                                     onClick={() => handleEdit(item.id)}
                                                     className="text-indigo-600 hover:text-indigo-900"
                                                     disabled={isDeleting}
                                                 >
                                                     <Edit2Icon className="w-4 h-4" />
-                                                </button> */}
-                                                <button
+                                                </button>
+                                                {/* <button
                                                     onClick={() => handleDelete(item.id)}
                                                     className="text-red-600 hover:text-red-900 "
                                                     disabled={isDeleting}
                                                 >
                                                     <TrashIcon className="w-4 h-4" />
-                                                </button>
+                                                </button> */}
                                             </div>
                                         ) : (
                                             item[column.key]
@@ -243,7 +243,7 @@ function DeleteUsers() {
                 <div className="flex flex-col min-h-screen bg-gray-100">
                     <header className="bg-white shadow">
                         <div className="max-w-6xl px-4 py-4 mx-auto sm:px-6 lg:px-8">
-                            <h1 className="text-2xl font-bold text-center text-gray-900">Delete Users</h1>
+                            <h1 className="text-2xl font-bold text-center text-gray-900">Edit Users</h1>
                         </div>
                     </header>
                     <main className="container flex-grow px-4 py-6 mx-auto sm:px-6 lg:px-8">
@@ -297,4 +297,4 @@ function DeleteUsers() {
     );
 }
 
-export default withAuthProtection(DeleteUsers);
+export default withAuthProtection(EditAllUsers);
