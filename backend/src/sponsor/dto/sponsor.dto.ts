@@ -24,24 +24,29 @@ export class CreateSponsorDtoByUserId {
   website: string;
 
   //   @IsDecimal({ decimal_digits: '4', force_decimal: true })
-  @IsNumber()
-  @IsOptional()
+  // @IsNumber()
+  // @IsOptional()
+  @IsNotEmpty()
   sponsorshipAmount?: number;
 
   @IsString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   sponsorshipType?: string;
 
   @IsDateString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   startDate?: string;
 
   @IsDateString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   endDate?: string;
 
-  @IsString()
-  @IsOptional()
+  // @IsString()
+  // @IsOptional()
+  @IsNotEmpty()
   contractUrl?: string;
 }
 
@@ -62,24 +67,29 @@ export class CreateSponsorsDtoSid {
   website: string;
 
   //   @IsDecimal({ decimal_digits: '4', force_decimal: true })
-  @IsNumber()
-  @IsOptional()
+  // @IsNumber()
+  // @IsOptional()
+  @IsNotEmpty()
   sponsorshipAmount?: number;
 
-  @IsString()
-  @IsOptional()
+  // @IsString()
+  // @IsOptional()
+  @IsNotEmpty()
   sponsorshipType?: string;
 
   @IsDateString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   startDate?: string;
 
   @IsDateString()
-  @IsOptional()
+  // @IsOptional()
+  @IsNotEmpty()
   endDate?: string;
 
-  @IsString()
-  @IsOptional()
+  // @IsString()
+  // @IsOptional()
+  @IsNotEmpty()
   contractUrl?: string;
 }
 

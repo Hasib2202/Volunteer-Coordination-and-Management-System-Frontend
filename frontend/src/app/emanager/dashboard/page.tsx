@@ -87,7 +87,7 @@ function EDashboard() {
         <div className="flex flex-col min-h-screen bg-gray-100">
           <header className="bg-white shadow">
             <div className="max-w-6xl px-3 py-1 mx-auto sm:px-6 lg:px-8">
-              <h1 className="text-2xl font-bold text-center text-gray-900">All Users.</h1>
+              <h1 className="text-2xl font-bold text-center text-gray-900">All Users</h1>
             </div>
           </header>
           <main className="container flex-grow px-4 py-6 mx-auto sm:px-6 lg:px-8">
