@@ -19,6 +19,7 @@ import {
   HttpStatus,
   Logger,
   Res,
+  Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -87,12 +88,31 @@ export class EventController {
     return { message: 'Event deleted successfully' };
   }
 
+  // @Get('all')
+  // @Roles(UserRole.EVENT_MANAGER)
+  // async findAll() {
+  //   const events = await this.eventService.findAll();
+  //   return { events };
+  // }
+
   @Get('all')
   @Roles(UserRole.EVENT_MANAGER)
-  async findAll() {
-    const events = await this.eventService.findAll();
+  async findAll(
+    @Query('sortBy') sortBy: string = 'id',
+    @Query('sortOrder') sortOrder: 'ASC' | 'DESC' = 'ASC',
+  ) {
+    const events = await this.eventService.findAll(sortBy, sortOrder);
     return { events };
   }
+
+  // @Get('all')
+  // @Roles(UserRole.EVENT_MANAGER)
+  // async findAll(@Query('sortBy') sortBy: string = 'id', @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'asc') {
+  //   const events = await this.eventService.findAll(sortBy, sortOrder);
+  //   return { events };
+  // }
+
+
 
   @Get(':eventId')
   @Roles(UserRole.EVENT_MANAGER)
