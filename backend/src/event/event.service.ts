@@ -138,12 +138,12 @@ export class EventService {
         date: true,
         status: true,
         progressNote: true,
-        progress: true,
+        // progress: true,
         totalVolunteers: true,
         totalDocuments: true,
         eventManager: {
           id: true,
-          name: true // Assuming eventManager has a name field
+          // name: true // Assuming eventManager has a name field
         }
       }
     });
