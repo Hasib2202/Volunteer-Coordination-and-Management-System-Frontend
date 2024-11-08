@@ -44,6 +44,7 @@ export class EventController {
   
   constructor(private readonly eventService: EventService) {}
 
+  
   @Post('em/:userId')
   @Roles(UserRole.EVENT_MANAGER,UserRole.ADMIN)
   async create(
@@ -104,6 +105,8 @@ export class EventController {
     const events = await this.eventService.findAll(sortBy, sortOrder);
     return { events };
   }
+
+  
 
   // @Get('all')
   // @Roles(UserRole.EVENT_MANAGER)

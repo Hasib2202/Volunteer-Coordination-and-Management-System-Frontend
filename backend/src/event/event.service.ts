@@ -115,49 +115,49 @@ export class EventService {
   //   return this.eventRepository.find();
   // }
 
-  async findAll(sortBy: string = 'id', sortOrder: 'ASC' | 'DESC' = 'ASC'): Promise<EventEntity[]> {
-    // Validate sortBy to prevent SQL injection
-    const allowedSortFields = [
-      'id', 'name', 'description', 'date', 'status', 
-      'progressNote', 'totalVolunteers', 'totalDocuments'
-    ];
+  // async findAll(sortBy: string = 'id', sortOrder: 'ASC' | 'DESC' = 'ASC'): Promise<EventEntity[]> {
+  //   // Validate sortBy to prevent SQL injection
+  //   const allowedSortFields = [
+  //     'id', 'name', 'description', 'date', 'status', 
+  //     'progressNote', 'totalVolunteers', 'totalDocuments'
+  //   ];
     
-    if (!allowedSortFields.includes(sortBy)) {
-      sortBy = 'id';
-    }
+  //   if (!allowedSortFields.includes(sortBy)) {
+  //     sortBy = 'id';
+  //   }
   
-    return this.eventRepository.find({
-      relations: ['eventManager'], // Include the eventManager relation
-      order: {
-        [sortBy]: sortOrder
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        date: true,
-        status: true,
-        progressNote: true,
-        // progress: true,
-        totalVolunteers: true,
-        totalDocuments: true,
-        eventManager: {
-          id: true,
-          // name: true // Assuming eventManager has a name field
-        }
-      }
-    });
-  }
-
-  // async findAll(sortBy: string, sortOrder: 'asc' | 'desc'): Promise<EventEntity[]> {
-  //   const order = sortOrder === 'asc' ? 'ASC' : 'DESC';
   //   return this.eventRepository.find({
-  //     relations: ['eventManager'], // Include Event Manager relation
+  //     relations: ['eventManager'], // Include the eventManager relation
   //     order: {
-  //       [sortBy]: order,
+  //       [sortBy]: sortOrder
   //     },
+  //     select: {
+  //       id: true,
+  //       name: true,
+  //       description: true,
+  //       date: true,
+  //       status: true,
+  //       progressNote: true,
+  //       progress: true,
+  //       totalVolunteers: true,
+  //       totalDocuments: true,
+  //       eventManager: {
+  //         id: true,
+  //         name: true // Assuming eventManager has a name field
+  //       }
+  //     }
   //   });
   // }
+
+  async findAll(sortBy: string, sortOrder: 'ASC' | 'DESC'): Promise<EventEntity[]> {
+    const order = sortOrder === 'ASC' ? 'ASC' : 'DESC';
+    return this.eventRepository.find({
+      relations: ['eventManager'], // Include Event Manager relation
+      order: {
+        [sortBy]: order,
+      },
+    });
+  }
   
 
   async findOne(id: number): Promise<EventEntity> {
