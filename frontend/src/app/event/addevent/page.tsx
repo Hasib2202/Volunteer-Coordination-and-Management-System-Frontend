@@ -1,3 +1,4 @@
+
 "use client"
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
@@ -32,33 +33,27 @@ function AddEvent() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchEventManagerId = async () => {
+    const fetchProfileData = async () => {
       try {
-        const eventManagerId = await getEventManagerId();
-        setEventManagerId(eventManagerId);
+        const userId = localStorage.getItem('user_id');
+        if (userId) {
+          const response = await axios.get(`http://localhost:3000/event-managers/user/${userId}`);
+          setEventManagerId(response.data.id);
+        } else {
+          toast.error('User ID not found');
+        }
       } catch (error: any) {
-        console.error('Error fetching event manager ID:', error.response || error.message);
-        toast.error(error.response?.data?.message || 'Error fetching event manager ID');
+        console.error('Error fetching profile:', error);
+        if (axios.isAxiosError(error)) {
+          toast.error(`Error: ${error.response?.data.message || error.message}`);
+        } else {
+          toast.error('Unexpected error occurred');
+        }
       }
     };
 
-    fetchEventManagerId();
-  }, []);
-
-  const getEventManagerId = async (): Promise<number> => {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      router.push('/signin');
-      return 0;
-    }
-
-    try {
-      const response = await axios.get(`http://localhost:3000/event-managers/${userId}`);
-      return response.data.id;
-    } catch (error) {
-      throw error;
-    }
-  };
+    fetchProfileData();
+  }, [router]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -77,9 +72,42 @@ function AddEvent() {
 
   const validateForm = (): FormErrors => {
     let formErrors: FormErrors = {};
-    // Validation logic remains the same
+  
+    // Validate Name (required, at least 3 characters)
+    if (!formData.name) {
+      formErrors.name = 'Name is required';
+    } else if (formData.name.length < 3) {
+      formErrors.name = 'Name must be at least 3 characters';
+    }
+  
+    // Validate Description (required, at least 10 characters)
+    if (!formData.description) {
+      formErrors.description = 'Description is required';
+    } else if (formData.description.length < 10) {
+      formErrors.description = 'Description must be at least 10 characters';
+    }
+  
+    // Validate Date (required, must be a valid date)
+    if (!formData.date) {
+      formErrors.date = 'Date is required';
+    } else {
+      const selectedDate = new Date(formData.date);
+      const currentDate = new Date();
+      if (selectedDate < currentDate) {
+        formErrors.date = 'Date must be in the future';
+      }
+    }
+  
+    // Validate Status (required, must be one of the defined statuses)
+    if (!formData.status) {
+      formErrors.status = 'Status is required';
+    } else if (!userStatus.includes(formData.status as UserStatus)) {
+      formErrors.status = 'Invalid status selected';
+    }
+  
     return formErrors;
   };
+  
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -31,9 +31,9 @@ function AllEvents() {
             sortOrder: sortConfig.direction,
           },
         });
-        
+
         setData(response.data.events || []);
-        
+
         if (!response.data.events) {
           console.warn("No events array in response:", response.data);
         }
@@ -57,18 +57,18 @@ function AllEvents() {
 
   const filteredData = React.useMemo(() => {
     if (!Array.isArray(data)) return [];
-    
+
     return data.filter((event) => {
       if (!event) return false;
       const searchLower = searchTerm.toLowerCase();
-      
+
       return (
         event.id?.toString().includes(searchTerm) ||
         event.name?.toLowerCase().includes(searchLower) ||
         event.description?.toLowerCase().includes(searchLower) ||
-        event.date?.toLowerCase().includes(searchLower) || 
+        event.date?.toLowerCase().includes(searchLower) ||
         event.status?.toLowerCase().includes(searchLower) ||
-        event.progressNote?.toLowerCase().includes(searchLower) || 
+        event.progressNote?.toLowerCase().includes(searchLower) ||
         event.eventManager?.name?.toLowerCase().includes(searchLower) ||
         event.eventManager?.id?.toString().includes(searchTerm) ||
         (event.progress && JSON.stringify(event.progress).toLowerCase().includes(searchLower)) ||
@@ -99,7 +99,7 @@ function AllEvents() {
       }
     }
   };
-  
+
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString();
@@ -111,11 +111,27 @@ function AllEvents() {
   const formatProgress = (progress) => {
     if (!progress) return 'N/A';
     try {
-      return typeof progress === 'object' ? 
-        `${progress.overall}%` : 
+      return typeof progress === 'object' ?
+        `${progress.overall}%` :
         progress.toString();
     } catch (error) {
       return 'N/A';
+    }
+  };
+
+  // Function to determine the color based on status
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'bg-green-200 text-green-800';
+      case 'In progress':
+        return 'bg-yellow-200 text-yellow-800';
+      case 'Pending':
+        return 'bg-blue-200 text-blue-800';
+      case 'Cancelled':
+        return 'bg-red-200 text-red-800';
+      default:
+        return 'bg-gray-200 text-gray-800';
     }
   };
 
@@ -129,7 +145,7 @@ function AllEvents() {
     { key: 'progress', label: 'Progress' },
     { key: 'totalVolunteers', label: 'Volunteers' },
     { key: 'totalDocuments', label: 'Documents' },
-    { key: 'eventManager', label: 'Event Manager' },
+    { key: 'eventManager', label: 'Event Manager ID' },
     { key: 'actions', label: 'Actions' },
   ];
 
@@ -143,7 +159,7 @@ function AllEvents() {
               <h1 className="text-2xl font-bold text-center text-gray-900">All Events</h1>
             </div>
           </header>
-          
+
           <main className="container flex-grow px-4 py-6 mx-auto sm:px-6 lg:px-8">
             <div className="overflow-hidden bg-white rounded-lg shadow-md">
               <div className="flex justify-end p-3 space-x-4">
@@ -162,6 +178,7 @@ function AllEvents() {
                   <FontAwesomeIcon icon={faEdit} className="mr-2" />
                   Edit Event
                 </button>
+
                 <button
                   className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
                   onClick={() => router.push('/emanager/deleteusers')}
@@ -211,27 +228,25 @@ function AllEvents() {
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredData.map((event, index) => (
-                        <tr key={event.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.id}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.name}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.description}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{formatDate(event.date)}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.status}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.progressNote}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{formatProgress(event.progress)}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.totalVolunteers}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.totalDocuments}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">{event.eventManager?.name}</td>
-                          <td className="px-4 py-2 text-xs text-gray-500">
-                            <div className="flex space-x-4">
-                              <button onClick={() => handleEdit(event.id)}>
-                                <FontAwesomeIcon icon={faEdit} />
-                              </button>
-                              <button onClick={() => handleDelete(event.id)}>
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
+                    <tbody className="divide-y bg-dark divide-dark-200">
+                      {filteredData.map((event) => (
+                        <tr key={event.id}>
+                          <td className="px-4 py-2 whitespace-nowrap">{event.id}</td>
+                          <td className="px-4 py-2 whitespace-nowrap">{event.name}</td>
+                          <td className="px-4 py-2">{event.description}</td>
+                          <td className="px-4 py-2">{formatDate(event.date)}</td>
+                          <td className={`px-4 py-2 text-xs font-semibold text-center rounded ${getStatusColor(event.status)}`}>
+                            {event.status}
+                          </td>
+                          <td className="px-4 py-2">{event.progressNote}</td>
+                          <td className="px-4 py-2">{formatProgress(event.progress)}</td>
+                          <td className="px-4 py-2">{event.totalVolunteers}</td>
+                          <td className="px-4 py-2">{event.totalDocuments}</td>
+                          <td className="px-4 py-2">{event.eventManager?.name || 'N/A'}</td>
+                          <td className="px-4 py-2">
+                            <div className="flex space-x-2">
+                              <button onClick={() => handleEdit(event.id)} className="text-blue-600 hover:text-blue-900">Edit</button>
+                              <button onClick={() => handleDelete(event.id)} className="text-red-600 hover:text-red-900">Delete</button>
                             </div>
                           </td>
                         </tr>
@@ -243,8 +258,8 @@ function AllEvents() {
             </div>
           </main>
         </div>
+        <Toaster />
       </div>
-      <Toaster />
     </>
   );
 }
