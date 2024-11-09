@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { ChevronUpIcon, ChevronDownIcon, Loader2 } from 'lucide-react';
+import { ChevronUp, ChevronDown, Loader2, Plus, Edit, Trash2, Search } from 'lucide-react';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { withAuthProtection } from '@/app/utils/withAuthProtection';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function AllEvents() {
   const [data, setData] = useState([]);
@@ -16,6 +15,8 @@ function AllEvents() {
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "ASC" });
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  // ... keep existing useEffect, handleSort, filteredData, handleEdit, handleDelete, formatDate, formatProgress functions ...
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,19 +120,19 @@ function AllEvents() {
     }
   };
 
-  // Function to determine the color based on status
+
   const getStatusColor = (status) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-200 text-green-800';
-      case 'In progress':
-        return 'bg-yellow-200 text-yellow-800';
-      case 'Pending':
-        return 'bg-blue-200 text-blue-800';
-      case 'Cancelled':
-        return 'bg-red-200 text-red-800';
+    switch (status?.toLowerCase()) {
+      case 'completed':
+        return 'bg-green-100 text-green-800 ring-1 ring-green-600/20';
+      case 'in progress':
+        return 'bg-gray-100 text-pink-800 ring-1 ring-yellow-600/20';
+      case 'pending':
+        return 'bg-blue-100 text-blue-800 ring-1 ring-blue-600/20';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800 ring-1 ring-red-600/20';
       default:
-        return 'bg-gray-200 text-gray-800';
+        return 'bg-gray-100 text-gray-800 ring-1 ring-gray-600/20';
     }
   };
 
@@ -153,112 +154,182 @@ function AllEvents() {
     <>
       <Sidebar />
       <div className="p-1 my-6 sm:ml-64">
-        <div className="flex flex-col min-h-screen bg-gray-100">
-          <header className="bg-white shadow">
-            <div className="max-w-6xl px-3 py-1 mx-auto sm:px-6 lg:px-8">
-              <h1 className="text-2xl font-bold text-center text-gray-900">All Events</h1>
+        <div className="flex flex-col min-h-screen bg-gray-50">
+          <header className="shadow-lg bg-gradient-to-r from-blue-600 to-blue-800">
+            <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+              <h1 className="text-3xl font-bold text-center text-white">
+                All Events
+              </h1>
             </div>
           </header>
 
-          <main className="container flex-grow px-4 py-6 mx-auto sm:px-6 lg:px-8">
-            <div className="overflow-hidden bg-white rounded-lg shadow-md">
-              <div className="flex justify-end p-3 space-x-4">
+          <main className="container flex-grow px-4 py-8 mx-auto sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="overflow-hidden bg-white border border-gray-100 shadow-xl rounded-xl"
+            >
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 p-4 border-b border-gray-100 bg-gray-50/50">
                 <button
-                  className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
                   onClick={() => router.push('/event/addevent')}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-all duration-200 bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                  <Plus className="w-4 h-4 mr-2" />
                   Add Event
                 </button>
-
                 <button
-                  className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-blue-700"
                   onClick={() => router.push('/emanager/editAllUsers')}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-all duration-200 bg-green-600 rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
-                  <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                  <Edit className="w-4 h-4 mr-2" />
                   Edit Event
                 </button>
-
                 <button
-                  className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
                   onClick={() => router.push('/emanager/deleteusers')}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-all duration-200 bg-red-600 rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
-                  <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                  <Trash2 className="w-4 h-4 mr-2" />
                   Delete Event
                 </button>
               </div>
-              <div className="p-1">
-                <input
-                  type="text"
-                  placeholder="Search events..."
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+
+              {/* Search Input */}
+              <div className="p-4 border-b border-gray-100">
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search events..."
+                    className="w-full px-4 py-2.5 pl-10 text-sm bg-dark-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
+
+              {/* Table */}
               <div className="overflow-x-auto">
                 {loading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin" />
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-center py-12"
+                  >
+                    <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                  </motion.div>
                 ) : filteredData.length === 0 ? (
-                  <div className="py-8 text-center text-gray-500">
-                    No events found
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="py-12 text-center text-gray-500"
+                  >
+                    <div className="mb-4">
+                      <Search className="w-12 h-12 mx-auto text-gray-400" />
+                    </div>
+                    <p className="text-lg font-medium">No events found</p>
+                    <p className="text-sm text-gray-400">Try adjusting your search terms</p>
+                  </motion.div>
                 ) : (
-                  <table className="w-auto min-w-full divide-y divide-gray-200">
+                  <table className="w-full min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         {columns.map((column) => (
                           <th
                             key={column.key}
                             scope="col"
-                            className="px-4 py-2 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer"
+                            className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-500 uppercase transition-colors duration-150 cursor-pointer hover:bg-gray-100"
                             onClick={() => column.key !== 'actions' && handleSort(column.key)}
                           >
                             <div className="flex items-center">
                               {column.label}
                               {sortConfig.key === column.key && (
                                 sortConfig.direction === 'ASC'
-                                  ? <ChevronUpIcon className="w-4 h-4 ml-1" />
-                                  : <ChevronDownIcon className="w-4 h-4 ml-1" />
+                                  ? <ChevronUp className="w-4 h-4 ml-1 text-blue-600" />
+                                  : <ChevronDown className="w-4 h-4 ml-1 text-blue-600" />
                               )}
                             </div>
                           </th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-white-200 text-dark">
-                      {filteredData.map((event) => (
-                        <tr key={event.id}>
-                          <td className="px-4 py-2 whitespace-nowrap">{event.id}</td>
-                          <td className="px-4 py-2 whitespace-nowrap">{event.name}</td>
-                          <td className="px-4 py-2">{event.description}</td>
-                          <td className="px-4 py-2">{formatDate(event.date)}</td>
-                          <td className={`px-4 py-2 text-xs font-semibold text-center rounded ${getStatusColor(event.status)}`}>
-                            {event.status}
-                          </td>
-                          <td className="px-4 py-2">{event.progressNote}</td>
-                          <td className="px-4 py-2">{formatProgress(event.progress)}</td>
-                          <td className="px-4 py-2">{event.totalVolunteers}</td>
-                          <td className="px-4 py-2">{event.totalDocuments}</td>
-                          <td className="px-4 py-2">ID : {event.eventManager?.id || 'N/A'}</td>
-                          <td className="px-4 py-2">
-                            <div className="flex space-x-2">
-                              <button onClick={() => handleEdit(event.id)} className="text-blue-600 bg-white hover:text-blue-900">Edit</button>
-                              <button onClick={() => handleDelete(event.id)} className="text-red-600 hover:text-red-900">Delete</button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      <AnimatePresence>
+                        {filteredData.map((event, index) => (
+                          <motion.tr
+                            key={event.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            className="transition-colors duration-150 hover:bg-gray-50"
+                          >
+                            <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{event.id}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900">{event.name}</div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm text-gray-500 line-clamp-2">{event.description}</div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              {formatDate(event.date)}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${getStatusColor(event.status)}`}>
+                                {event.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{event.progressNote}</td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col space-y-1">
+                                <span className="text-sm text-gray-600">
+                                  {formatProgress(event.progress)}
+                                </span>
+                                <div className="w-full h-2 bg-gray-200 rounded-full">
+                                  <div
+                                    className="h-2 transition-all duration-500 ease-out bg-blue-600 rounded-full"
+                                    style={{ width: `${event.progress}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              {event.totalVolunteers}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              {event.totalDocuments}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              ID: {event.eventManager?.id || 'N/A'}
+                            </td>
+                            <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                              <div className="flex space-x-3">
+                                <button
+                                  onClick={() => handleEdit(event.id)}
+                                  className="text-blue-600 transition-colors duration-150 hover:text-blue-900"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(event.id)}
+                                  className="text-red-600 transition-colors duration-150 hover:text-red-900"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     </tbody>
                   </table>
                 )}
               </div>
-            </div>
+            </motion.div>
           </main>
         </div>
-        <Toaster />
+        <Toaster position="top-right" />
       </div>
     </>
   );

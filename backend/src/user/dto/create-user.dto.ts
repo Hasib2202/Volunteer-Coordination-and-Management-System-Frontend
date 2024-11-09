@@ -13,8 +13,8 @@ import { UserRole } from '../entities/user.entity';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[a-zA-Z\s]*$/, {
-    message: 'Name should contain only alphabets and spaces',
+  @Matches(/^[a-zA-Z\s.]*$/, {
+    message: 'Name should contain only alphabets, spaces, and dots',
   })
   name: string;
 
@@ -85,10 +85,10 @@ export class CreateUserDto {
 export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[a-zA-Z\s]*$/, {
-    message: 'Name should contain only alphabets and spaces',
+  @Matches(/^[a-zA-Z\s.]*$/, {
+    message: 'Name should contain only alphabets, spaces, and dots',
   })
-  name?: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()

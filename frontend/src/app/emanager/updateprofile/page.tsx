@@ -6,6 +6,8 @@ import { Toaster, toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { withAuthProtection } from "@/app/utils/withAuthProtection";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSave } from "@fortawesome/free-solid-svg-icons";
 
 // enum UserRole {
 //   EVENT_MANAGER = "Event_Manager",
@@ -231,6 +233,8 @@ function UpdateProfile() {
                 type="submit"
                 className="inline-flex items-center px-5 py-3 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
+                <FontAwesomeIcon icon={faSave} className="mr-2" />
+
                 Save Changes
               </button>
             </div>
