@@ -8,6 +8,8 @@ import { withAuthProtection } from '@/app/utils/withAuthProtection';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 function AllEvents() {
   const [data, setData] = useState([]);
@@ -83,6 +85,10 @@ function AllEvents() {
     router.push(`/event/editevent/${eventId}`);
   };
 
+  const handleAssign = (eventId) => {
+    router.push(`/event/assignvolunteer/${eventId}`);
+  }
+
   const handleDelete = async (eventId) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
@@ -148,6 +154,7 @@ function AllEvents() {
     { key: 'totalDocuments', label: 'Documents' },
     { key: 'eventManager', label: 'Event Manager ID' },
     { key: 'actions', label: 'Actions' },
+    { key: 'actions', label: 'Assign-volunteer' },
   ];
 
   return (
@@ -155,7 +162,7 @@ function AllEvents() {
       <Sidebar />
       <div className="p-1 my-6 sm:ml-64">
         <div className="flex flex-col min-h-screen bg-gray-50">
-          <header className="shadow-lg bg-gradient-to-r from-blue-600 to-blue-800">
+          <header className="shadow-lg bg-gradient-to-r from-green-600 to-blue-800">
             <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold text-center text-white">
                 All Events
@@ -319,6 +326,18 @@ function AllEvents() {
                                 </button>
                               </div>
                             </td>
+
+                            <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                              <div className="flex space-x-3">
+                                <button
+                                  onClick={() => handleAssign(event.id)}
+                                  className="text-blue-600 transition-colors duration-150 hover:text-blue-900"
+                                >
+                                  <FontAwesomeIcon icon={faUserPlus} className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+
                           </motion.tr>
                         ))}
                       </AnimatePresence>

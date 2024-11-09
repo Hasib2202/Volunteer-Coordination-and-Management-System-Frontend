@@ -168,45 +168,107 @@ export class EventService {
       return event;
     }
 
+  // async assignVolunteerToEvent(
+  //   eventId: number,
+  //   volunteerId: number,
+  // ): Promise<EventEntity> {
+  //   const event = await this.eventRepository.findOne({
+  //     where: { id: eventId },
+  //     relations: ['volunteers'],
+  //   });
+  //   if (!event) {
+  //     throw new NotFoundException(`Event with id ${eventId} not found`);
+  //   }
+
+  //   const volunteer = await this.volunteerRepository.findOne({
+  //     where: { id: volunteerId },
+  //     relations: ['user'],
+  //   });
+  //   if (!volunteer) {
+  //     throw new NotFoundException(`Volunteer with id ${volunteerId} not found`);
+  //   }
+
+  //   event.volunteers.push(volunteer);
+  //   await this.eventRepository.save(event);
+  //   console.log(
+  //     `Volunteer with ID ${volunteerId} has been assigned to Event with ID ${eventId}`,
+  //   );
+
+  //   // Update the progress after assigning a volunteer
+  //   await this.updateEventPortion(eventId);
+
+  //   // Send email notification to the volunteer
+  //   await this.mailerService.sendEventNotification(
+  //     volunteer.email,
+  //     volunteer.nickName,
+  //     event.name,
+  //     event.date.toISOString(),
+  //   );
+
+  //   return event;
+  // }
+
+   // Method in EventService
   async assignVolunteerToEvent(
     eventId: number,
     volunteerId: number,
   ): Promise<EventEntity> {
+    // Find the event with related volunteers
     const event = await this.eventRepository.findOne({
-      where: { id: eventId },
-      relations: ['volunteers'],
+        where: { id: eventId },
+        relations: ['volunteers'],
     });
     if (!event) {
-      throw new NotFoundException(`Event with id ${eventId} not found`);
+        throw new NotFoundException(`Event with id ${eventId} not found`);
     }
 
+    // Find the volunteer by ID
     const volunteer = await this.volunteerRepository.findOne({
-      where: { id: volunteerId },
-      relations: ['user'],
+        where: { id: volunteerId },
+        relations: ['user'],
     });
     if (!volunteer) {
-      throw new NotFoundException(`Volunteer with id ${volunteerId} not found`);
+        throw new NotFoundException(`Volunteer with id ${volunteerId} not found`);
     }
 
+    // Add the volunteer to the event's volunteer list
     event.volunteers.push(volunteer);
     await this.eventRepository.save(event);
-    console.log(
-      `Volunteer with ID ${volunteerId} has been assigned to Event with ID ${eventId}`,
-    );
 
-    // Update the progress after assigning a volunteer
-    await this.updateEventPortion(eventId);
+    // Update the event's volunteer count and document count
+    await this.updateEventCounts(event);
 
-    // Send email notification to the volunteer
+    // Send email notification
     await this.mailerService.sendEventNotification(
-      volunteer.email,
-      volunteer.nickName,
-      event.name,
-      event.date.toISOString(),
+        volunteer.email,
+        volunteer.nickName,
+        event.name,
+        event.date.toISOString(),
     );
 
     return event;
   }
+
+  // Helper function to update volunteer and document counts
+  async updateEventCounts(event: EventEntity) {
+    // Query to count the actual volunteers assigned to this event
+    const volunteerCount = await this.volunteerRepository.count({
+        where: { events: { id: event.id } },
+    });
+
+    // Query to count the actual documents related to this event
+    const documentCount = await this.documentRepository.count({
+        where: { event: { id: event.id } },
+    });
+
+    // Update the counts in the event entity
+    event.totalVolunteers = volunteerCount;
+    event.totalDocuments = documentCount;
+
+    // Save the updated event counts to the database
+    await this.eventRepository.save(event);
+  }
+
 
   async unassignVolunteerFromEvent(
     eventId: number,
