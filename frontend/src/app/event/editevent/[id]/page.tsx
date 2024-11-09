@@ -39,7 +39,7 @@ function EditEvent({ params }: { params: { id: string } }) {
             if (id) {
                 try {
                     const response = await axios.get<EventResponse>(`http://localhost:3000/events/${id}`);
-                    setEvent(response.data.event); // Access the event property from the response
+                    setEvent(response.data.event);
                 } catch (error) {
                     console.error('Error fetching event:', error);
                     toast.error('Failed to fetch event information');
@@ -56,8 +56,42 @@ function EditEvent({ params }: { params: { id: string } }) {
         setEvent({ ...event, [e.target.name]: e.target.value });
     };
 
+    const validateInputs = () => {
+        const { name, description, date, status } = event;
+
+        // Validate event name (non-empty and max length 100)
+        if (!name || name.length > 100) {
+            toast.error('Event name is required and must be 100 characters or less');
+            return false;
+        }
+
+        // Validate description (non-empty and max length 500)
+        if (!description || description.length > 500) {
+            toast.error('Description is required and must be 500 characters or less');
+            return false;
+        }
+
+        // Validate date (non-empty and should not be a past date)
+        const selectedDate = new Date(date);
+        const today = new Date();
+        if (!date || selectedDate < today) {
+            toast.error('Please select a valid future date for the event');
+            return false;
+        }
+
+        // Validate status (must be one of the statusOptions)
+        if (!statusOptions.includes(status)) {
+            toast.error('Please select a valid status');
+            return false;
+        }
+
+        return true;
+    };
+
     const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!validateInputs()) return;
+
         setIsLoading(true);
 
         const { name, description, date, status } = event;
@@ -84,7 +118,7 @@ function EditEvent({ params }: { params: { id: string } }) {
 
     return (
         <>
-            <Toaster position="top-right" />
+            <Toaster position="bottom-right" />
             <Sidebar />
             <div className="p-4 sm:ml-64">
                 <div className="min-h-screen py-8">
