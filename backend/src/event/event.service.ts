@@ -160,13 +160,13 @@ export class EventService {
   }
   
 
-  async findOne(id: number): Promise<EventEntity> {
-    const event = await this.eventRepository.findOne({ where: { id } });
-    if (!event) {
-      throw new NotFoundException(`Event with ID ${id} not found`);
+    async findOne(id: number): Promise<EventEntity> {
+      const event = await this.eventRepository.findOne({ where: { id } });
+      if (!event) {
+        throw new NotFoundException(`Event with ID ${id} not found`);
+      }
+      return event;
     }
-    return event;
-  }
 
   async assignVolunteerToEvent(
     eventId: number,

@@ -44,7 +44,7 @@ export class EventController {
   
   constructor(private readonly eventService: EventService) {}
 
-  
+  //add event service
   @Post('em/:userId')
   @Roles(UserRole.EVENT_MANAGER,UserRole.ADMIN)
   async create(
@@ -73,6 +73,7 @@ export class EventController {
   //   }
   // }
 
+  // edit event service
   @Put(':eventId')
   @Roles(UserRole.EVENT_MANAGER)
   update(
