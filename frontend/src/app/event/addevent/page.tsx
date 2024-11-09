@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { withAuthProtection } from '@/app/utils/withAuthProtection';
+import Loading from '@/app/loading';
 
 const userStatus = ['Pending', 'In Progress', 'Completed', 'Cancelled'] as const;
 type UserStatus = typeof userStatus[number];
@@ -75,7 +76,7 @@ function AddEvent() {
   
     // Validate Name (required, at least 3 characters)
     if (!formData.name) {
-      formErrors.name = 'Name is required';
+      formErrors.name = 'Event name is required';
     } else if (formData.name.length < 3) {
       formErrors.name = 'Name must be at least 3 characters';
     }
@@ -121,7 +122,7 @@ function AddEvent() {
       if (eventManagerId) {
         const response = await axios.post(`http://localhost:3000/events/em/${eventManagerId}`, formData);
         toast.success('Event added successfully!');
-        router.push('/events'); // Redirect the user to the events list page
+        router.push('/event/showallevent'); // Redirect the user to the events list page
       } else {
         toast.error('Error: Event Manager ID not found.');
       }
@@ -185,7 +186,9 @@ function AddEvent() {
             </form>
           </div>
         ) : (
-          <div>Loading...</div>
+          <div>
+            <Loading />
+          </div>
         )}
       </div>
 

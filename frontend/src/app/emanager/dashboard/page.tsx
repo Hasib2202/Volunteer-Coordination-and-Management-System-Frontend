@@ -7,6 +7,8 @@ import Sidebar from '@/components/Sidebar/Sidebar';
 import { withAuthProtection } from '@/app/utils/withAuthProtection';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';  // Import toast from react-hot-toast
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function EDashboard() {
   const [data, setData] = useState([]);
@@ -97,6 +99,7 @@ function EDashboard() {
                   className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
                   onClick={() => router.push('/emanager/adduser')}
                 >
+                  <FontAwesomeIcon icon={faPlus} className="mr-2" />
                   Add User
                 </button>
 
@@ -104,12 +107,15 @@ function EDashboard() {
                   className="px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-blue-700"
                   onClick={() => router.push('/emanager/editAllUsers')}
                 >
+                  <FontAwesomeIcon icon={faEdit} className="mr-2" />
                   Edit User
                 </button>
                 <button
                   className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
                   onClick={() => router.push('/emanager/deleteusers')}
                 >
+                  <FontAwesomeIcon icon={faTrash} className="mr-2" />
+
                   Delete User
                 </button>
               </div>

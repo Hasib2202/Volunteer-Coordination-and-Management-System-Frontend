@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { withAuthProtection } from '@/app/utils/withAuthProtection';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 interface EventManager {
     id: number;
@@ -124,6 +126,8 @@ function EventManagerProfile() {
                         </div>
                     </div>
                     <button type="submit" className="p-2 text-white bg-blue-500 rounded">
+                    <FontAwesomeIcon icon={faSync} className="mr-2" />
+                            
                             Refresh Profile
                     </button>
                 </div>

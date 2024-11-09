@@ -206,7 +206,7 @@ function AllEvents() {
                     No events found
                   </div>
                 ) : (
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="w-auto min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         {columns.map((column) => (
@@ -228,7 +228,7 @@ function AllEvents() {
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y bg-dark divide-dark-200">
+                    <tbody className="bg-white divide-y divide-white-200 text-dark">
                       {filteredData.map((event) => (
                         <tr key={event.id}>
                           <td className="px-4 py-2 whitespace-nowrap">{event.id}</td>
@@ -242,10 +242,10 @@ function AllEvents() {
                           <td className="px-4 py-2">{formatProgress(event.progress)}</td>
                           <td className="px-4 py-2">{event.totalVolunteers}</td>
                           <td className="px-4 py-2">{event.totalDocuments}</td>
-                          <td className="px-4 py-2">{event.eventManager?.name || 'N/A'}</td>
+                          <td className="px-4 py-2">ID : {event.eventManager?.id || 'N/A'}</td>
                           <td className="px-4 py-2">
                             <div className="flex space-x-2">
-                              <button onClick={() => handleEdit(event.id)} className="text-blue-600 hover:text-blue-900">Edit</button>
+                              <button onClick={() => handleEdit(event.id)} className="text-blue-600 bg-white hover:text-blue-900">Edit</button>
                               <button onClick={() => handleDelete(event.id)} className="text-red-600 hover:text-red-900">Delete</button>
                             </div>
                           </td>

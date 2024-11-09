@@ -5,6 +5,8 @@ import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { withAuthProtection } from "@/app/utils/withAuthProtection";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
 
 enum UserStatus {
     ACTIVE = "Active",
@@ -185,6 +187,8 @@ function Profile() {
                             onClick={() => setIsModalOpen(true)}
                             className="p-2 text-white bg-green-500 rounded"
                         >
+                            <FontAwesomeIcon icon={faEdit} className="mr-2" />
+
                             Update Status
                         </button>
                         {/* <button
@@ -199,6 +203,7 @@ function Profile() {
                             onClick={handleRefresh}
                             className="p-2 text-white bg-blue-500 rounded"
                         >
+                            <FontAwesomeIcon icon={faSync} className="mr-2" />
                             Refresh Information
                         </button>
                     </div>
