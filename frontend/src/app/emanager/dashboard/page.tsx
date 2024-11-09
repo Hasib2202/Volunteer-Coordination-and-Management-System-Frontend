@@ -151,6 +151,7 @@ function EDashboard() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
+                    
                     {filteredData.map((user, index) => (
                       <tr key={user.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="px-4 py-2 text-xs text-gray-500 whitespace-nowrap">{user.id}</td>

@@ -80,7 +80,7 @@ function AllEvents() {
   }, [data, searchTerm]);
 
   const handleEdit = (eventId) => {
-    router.push(`/emanager/updateusers/${eventId}`);
+    router.push(`/event/editevent/${eventId}`);
   };
 
   const handleDelete = async (eventId) => {

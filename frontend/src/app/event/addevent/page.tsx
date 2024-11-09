@@ -78,7 +78,7 @@ function AddEvent() {
     if (!formData.name) {
       formErrors.name = 'Event name is required';
     } else if (formData.name.length < 3) {
-      formErrors.name = 'Name must be at least 3 characters';
+      formErrors.name = 'Event name must be at least 3 characters';
     }
   
     // Validate Description (required, at least 10 characters)
@@ -170,7 +170,7 @@ function AddEvent() {
                       name={key}
                       value={formData[key]}
                       onChange={handleChange}
-                      placeholder={`Enter ${key}`}
+                      placeholder={`Enter event ${key}`}
                       className="w-full px-3 py-2 text-sm leading-tight border rounded shadow appearance-none text-white-700 focus:outline-none focus:shadow-outline"
                     />
                   )}
