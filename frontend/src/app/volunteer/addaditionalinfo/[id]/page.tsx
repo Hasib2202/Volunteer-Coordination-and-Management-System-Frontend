@@ -79,7 +79,7 @@ function AddUser({ params }: { params: { id: string } }) {
         try {
             await axios.put(`http://localhost:3000/volunteers/add-infov/${id}`, formData);
             toast.success('User information updated successfully');
-            router.push(`/emanager/users`);
+            router.push(`/emanager/dashboard`);
         } catch (error) {
             console.error('Error updating user:', error);
             if (axios.isAxiosError(error)) {
@@ -105,7 +105,7 @@ function AddUser({ params }: { params: { id: string } }) {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {(Object.keys(formData) as Array<keyof FormData>).map((key) => (
                             <div key={key} className="mb-4">
-                                <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor={key}>
+                                <label className="block mb-2 text-sm font-bold text-white-700" htmlFor={key}>
                                     {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
                                 </label>
                                 {key === 'experience' || key === 'skills' ? (
